@@ -52,8 +52,9 @@ func runUpgrade() {
 		targetVersion = "latest"
 	}
 
-	if targetVersion == version {
+	if targetVersion == version && targetVersion != "latest" {
 		fmt.Printf("✓ Current version: %s, upgradtion ignored.\n", version)
+		return
 	}
 
 	// remote version check
@@ -86,6 +87,11 @@ func runUpgrade() {
 	}
 
 	targetVersion = result.TagName
+	if targetVersion == version {
+		fmt.Printf("✓ Current version: %s, you are up to date.\n", version)
+		return
+	}
+
 	fmt.Printf("✓ Version %s is available, upgrading now...\n", targetVersion)
 
 	upgrade()
