@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/poneding/ssher/internal/ssh"
+	"github.com/poneding/ssher/pkg/util"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -65,7 +66,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Search config in home directory with name ".ssher" (without extension).
-		viper.AddConfigPath(userHomeDirOrDie())
+		viper.AddConfigPath(util.UserHomeDirOrDie())
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".ssher")
 	}
@@ -76,19 +77,10 @@ func initConfig() {
 		file := viper.ConfigFileUsed()
 		if file == "" {
 
-			file = userHomeDirOrDie() + "/.ssher.yaml"
+			file = util.UserHomeDirOrDie() + "/.ssher.yaml"
 		}
 		ssh.CreateProfileFile(file)
 	}
-}
-
-func userHomeDirOrDie() string {
-	path, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Println("✗ Error:", err)
-		os.Exit(0)
-	}
-	return path
 }
 
 func runConnect() {
@@ -106,7 +98,9 @@ func runConnect() {
 	}
 
 	// reset current profile
-	ssh.GetCurrentProfile().Current = false
+	if current := ssh.GetCurrentProfile(); current != nil {
+		current.Current = false
+	}
 	profile.Current = true
 	ssh.SaveProfiles()
 

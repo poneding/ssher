@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/manifoldco/promptui"
+	"github.com/poneding/ssher/pkg/util"
 )
 
 type PromptLable string
@@ -165,6 +166,11 @@ func FormPrompt() *Profile {
 				}
 				if input == "q" {
 					os.Exit(0)
+				}
+
+				// compatible with home path with ~, e.g. ~/.ssh/id_rsa
+				if strings.HasPrefix(input, "~") {
+					input = strings.Replace(input, "~", util.UserHomeDirOrDie(), 1)
 				}
 				_, err := os.Stat(input)
 				return err
