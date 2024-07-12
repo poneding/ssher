@@ -32,10 +32,10 @@ MacOS & Linux installation, refer to the following commands:
 
 ```bash
 # MacOS
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 
 # Linux
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 ```
 
 > Note: Before downloading, make sure your system is `arm64` or `amd64`, and download the corresponding binary file.
@@ -46,7 +46,7 @@ Download the `ssher.exe` file first:
 
 ```bash
 # Download .exe file
-wget https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_windows_amd64.exe
+wget https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_windows_amd64.exe
 ```
 
 Add the `ssher.exe` file path to the environment variable after download done, or put it in a path that has already been added to the environment variable.

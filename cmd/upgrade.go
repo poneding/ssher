@@ -137,7 +137,7 @@ func upgradeByDownload(v string) {
 
 	targetFile := fmt.Sprintf("ssher_%s_%s_%s%s", strings.Trim(v, "v"), runtime.GOOS, runtime.GOARCH, ext)
 
-	// download from github release. eg: https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_linux_amd64
+	// download from github release. eg: https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_linux_amd64
 	r, err := http.Get(fmt.Sprintf("%s/download/%s/%s", GH_RELEASE_PROXY_ADDR_BASE, v, targetFile))
 	if err != nil || r.StatusCode != http.StatusOK {
 		fmt.Println("✗ Failed to download:", err)

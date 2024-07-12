@@ -15,7 +15,6 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"runtime"
 	"strconv"
 	"syscall"
 
@@ -48,20 +47,17 @@ func Connect(profile *Profile) {
 	defer func() { _ = ptmx.Close() }() // Best effort.
 
 	// Handle pty size.
-	if runtime.GOOS != "windows" {
-		//
-		ch := make(chan os.Signal, 1)
-		signal.Notify(ch, syscall.SIGWINCH)
-		go func() {
-			for range ch {
-				if err := pty.InheritSize(os.Stdin, ptmx); err != nil {
-					log.Printf("error resizing pty: %s", err)
-				}
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGWINCH)
+	go func() {
+		for range ch {
+			if err := pty.InheritSize(os.Stdin, ptmx); err != nil {
+				log.Printf("error resizing pty: %s", err)
 			}
-		}()
-		ch <- syscall.SIGWINCH                        // Initial resize.
-		defer func() { signal.Stop(ch); close(ch) }() // Cleanup signals when done.
-	}
+		}
+	}()
+	ch <- syscall.SIGWINCH                        // Initial resize.
+	defer func() { signal.Stop(ch); close(ch) }() // Cleanup signals when done.
 
 	// Set stdin in raw mode.
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
@@ -99,9 +95,8 @@ func Connect(profile *Profile) {
 				fmt.Println("✗ Failed to write password to pty:", err)
 				os.Exit(0)
 			}
+			break
 		}
-		break
 	}
-
 	_, _ = io.Copy(os.Stdout, ptmx)
 }

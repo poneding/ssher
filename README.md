@@ -32,10 +32,10 @@ MacOS & Linux 安装，参考以下命令：
 
 ```bash
 # MacOS
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 
 # Linux
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 ```
 
 > 注意：下载前确认你的系统是 `arm64` 还是 `amd64`，下载对应的二进制文件。
@@ -46,7 +46,7 @@ Windows 安装，参考以下步骤：
 
 ```bash
 # 下载 .exe 文件
-wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.2/ssher_1.0.2_windows_amd64.exe
+wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_windows_amd64.exe
 ```
 
 下载完成后，将 `ssher.exe` 文件路径添加到环境变量中，或者将其放到一个已经添加到环境变量的路径下。
