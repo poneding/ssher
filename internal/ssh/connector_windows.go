@@ -8,25 +8,24 @@ Copyright © 2024 Pone Ding <poneding@gmail.com>
 package ssh
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
+
+	"github.com/poneding/ssher/internal/output"
 )
 
 // Connect to the ssh server.
-func Connect(profile *Profile) {
-	cmd := exec.Command("ssh", "-p", strconv.Itoa(profile.Port))
-	if profile.PrivateKey != "" {
-		if profile.PrivateKey != "" {
-			cmd.Args = append(cmd.Args, "-i", profile.PrivateKey)
-		}
+func Connect(server *Server) {
+	cmd := exec.Command("ssh", "-p", strconv.Itoa(server.Port))
+	if server.IdentityFile != "" {
+		cmd.Args = append(cmd.Args, "-i", server.IdentityFile)
 	}
 
-	if profile.User != "" {
-		cmd.Args = append(cmd.Args, profile.User+"@"+profile.Host)
+	if server.User != "" {
+		cmd.Args = append(cmd.Args, server.User+"@"+server.Host)
 	} else {
-		cmd.Args = append(cmd.Args, profile.Host)
+		cmd.Args = append(cmd.Args, server.Host)
 	}
 
 	cmd.Stdout = os.Stdout
@@ -34,8 +33,7 @@ func Connect(profile *Profile) {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Start(); err != nil {
-		fmt.Println("✗ Failed to run ssh:", err)
-		os.Exit(0)
+		output.Fatal("Failed to run ssh:", err)
 	}
 	cmd.Wait()
 }

@@ -1,16 +1,14 @@
-//go:build !windows
-// +build !windows
-
 /*
 Copyright © 2024 Pone Ding <poneding@gmail.com>
 */
 package cmd
 
 import (
-	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/poneding/ssher/internal/output"
 	"github.com/poneding/ssher/internal/ssh"
 	"github.com/spf13/cobra"
 )
@@ -18,11 +16,11 @@ import (
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:     "list",
-	Short:   "List all ssh profiles.",
-	Long:    `List all ssh profiles.`,
+	Short:   "List all servers.",
+	Long:    `List all servers.`,
 	Aliases: []string{"ls"},
 	Run: func(cmd *cobra.Command, args []string) {
-		runList()
+		runListServers()
 	},
 }
 
@@ -30,38 +28,48 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 }
 
-func runList() {
-	profiles := ssh.GetProfiles()
-	if len(profiles) == 0 {
-		fmt.Println("No profiles found, add a new ssh profile with `ssher add`.")
+func runListServers() {
+	servers := ssh.GetServers()
+	if len(servers) == 0 {
+		output.Note("No servers found, add a new server with `ssher add`.")
 		return
 	}
 
 	var paddingLen int
-	for _, p := range profiles {
-		if len(p.Name) > paddingLen {
-			paddingLen = len(p.Name)
+	for _, s := range servers {
+		if len(s.Name) > paddingLen {
+			paddingLen = len(s.Name)
 		}
 	}
 
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"", "Name", "Host", "Port", "User", "Password", "Private Key"})
+	if runtime.GOOS != "windows" {
+		t.AppendHeader(table.Row{"", "NAME", "HOST", "PORT", "USER", "PASSWORD", "IDENTITY_FILE"})
+	} else {
+		t.AppendHeader(table.Row{"", "NAME", "HOST", "PORT", "USER", "IDENTITY_FILE"})
+	}
 
-	current := func(p *ssh.Profile) string {
-		if p.Current {
-			return "*"
+	current := func(s *ssh.Server) string {
+		if s.Current {
+			return "✦"
 		}
 		return " "
 	}
-	password := func(p *ssh.Profile) string {
-		if p.Password != "" {
+	password := func(s *ssh.Server) string {
+		if s.Password != "" {
 			return "******"
 		}
 		return ""
 	}
-	for _, p := range profiles {
-		t.AppendRow(table.Row{current(p), p.Name, p.Host, p.Port, p.User, password(p), p.PrivateKey})
+
+	for _, s := range servers {
+		if runtime.GOOS != "windows" {
+			t.AppendRow(table.Row{current(s), s.Name, s.Host, s.Port, s.User, password(s), s.IdentityFile})
+		} else {
+			t.AppendRow(table.Row{current(s), s.Name, s.Host, s.Port, s.User, s.IdentityFile})
+		}
 	}
+	t.SetStyle(table.StyleRounded)
 	t.Render()
 }

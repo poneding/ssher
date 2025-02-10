@@ -8,7 +8,7 @@
 
 中文 | [ENG](README_en-US.md)
 
-ssher 是一款轻量的 SSH Profile 管理命令行工具，让你可以更方便的连接到你的服务器。
+ssher 是一款连接远程服务器命令行工具，简单易用。
 
 由于是使用 Go 语言开发，所以支持多平台，包括 Linux、MacOS 和 Windows。
 
@@ -32,10 +32,10 @@ MacOS & Linux 安装，参考以下命令：
 
 ```bash
 # MacOS
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://github.com/poneding/ssher/releases/download/v1.1.0/ssher_1.1.0_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 
 # Linux
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://github.com/poneding/ssher/releases/download/v1.1.0/ssher_1.1.0_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 ```
 
 > 注意：下载前确认你的系统是 `arm64` 还是 `amd64`，下载对应的二进制文件。
@@ -46,7 +46,7 @@ Windows 安装，参考以下步骤：
 
 ```bash
 # 下载 .exe 文件
-wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_windows_amd64.exe
+wget https://github.com/poneding/ssher/releases/download/v1.1.0/ssher_1.1.0_windows_amd64.exe
 ```
 
 下载完成后，将 `ssher.exe` 文件路径添加到环境变量中，或者将其放到一个已经添加到环境变量的路径下。
@@ -71,33 +71,27 @@ go build -o ssher main.go
 
 ```bash
 ssher
+ssher -s <server>
 ```
 
-输入以上命令，会进入交互模式，在交互模式中你可以使用通过 `↓ ↑ → ←` 键选择你要连接的 SSH Profile 或者添加新的 SSH Profile。
+输入以上命令，会进入交互模式，在交互模式中你可以使用通过 `↓ ↑ → ←` 键选择你要连接的服务器或者添加新的服务器
 
-### SSH 连接管理操作
+### 服务器管理操作
 
 ```bash
-# 查看 ssh 连接列表
+# 查看 ssh 连接列表(list, ls)
 ssher list
 
 # 添加 ssh 连接
 ssher add
 
-# 删除 ssh 连接
+# 删除 ssh 连接(remove, rm)
 ssher remove
-```
+ssher remove <server_a> <server_b>
 
-### SSH Profile 文件操作
-
-Profile 文件中存储了你的服务器信息，你可以通过以下命令查看和编辑 profile 文件：
-
-```bash
-# 查看 profile
-ssher profile view
-
-# 编辑 profile
-ssher profile edit
+# 编辑 ssh 连接
+ssher edit
+ssher edit <server>
 ```
 
 ### 版本和升级

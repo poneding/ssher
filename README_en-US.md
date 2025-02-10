@@ -8,7 +8,7 @@ ENG | [中文](README.md)
 
 # ssher
 
-ssher is a lightweight SSH connection management command-line tool that allows you to connect to your server more conveniently.
+ssher is an easy-to-use command line tool for connecting to remote servers.
 
 ssher developed with Go language, so it supports multiple platforms, including Linux, MacOS, and Windows.
 
@@ -32,10 +32,10 @@ MacOS & Linux installation, refer to the following commands:
 
 ```bash
 # MacOS
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://github.com/poneding/ssher/releases/download/v1.1.0/ssher_1.1.0_darwin_arm64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 
 # Linux
-sudo wget https://ghproxy.ketches.cn/https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
+sudo wget https://github.com/poneding/ssher/releases/download/v1.1.0/ssher_1.1.0_linux_amd64 -O /user/local/bin/ssher && sudo chmod +x /user/local/bin/ssher
 ```
 
 > Note: Before downloading, make sure your system is `arm64` or `amd64`, and download the corresponding binary file.
@@ -46,7 +46,7 @@ Download the `ssher.exe` file first:
 
 ```bash
 # Download .exe file
-wget https://github.com/poneding/ssher/releases/download/v1.0.3/ssher_1.0.3_windows_amd64.exe
+wget https://github.com/poneding/ssher/releases/download/v1.1.0/ssher_1.1.0_windows_amd64.exe
 ```
 
 Add the `ssher.exe` file path to the environment variable after download done, or put it in a path that has already been added to the environment variable.
@@ -71,33 +71,27 @@ go build -o ssher main.go
 
 ```bash
 ssher
+ssher -s <server>
 ```
 
-Execute the above command, you will enter the interactive mode, where you can use the `↓ ↑ → ←` keys to select the ssh profile you want to connect to or add a new ssh profile.
+Execute the above command, you will enter the interactive mode, where you can use the `↓ ↑ → ←` keys to select the server you want to connect to or add a new server.
 
-### SSH profile operation
+### Server management operation
 
 ```bash
-# View the ssh profile list
+# List all servers(list, ls)
 ssher list
 
-# Add ssh profile
+# Add a new server
 ssher add
 
-# Remove ssh profile
+# Remove a server(remove, rm)
 ssher remove
-```
+ssher remove <server_a> <server_b>
 
-### SSH Profile file operation
-
-Profile file stores your server information, you can view and edit the profile file with the following commands:
-
-```bash
-# View profile
-ssher profile view
-
-# Edit profile
-ssher profile edit
+# Edit a server
+ssher edit
+ssher edit <server>
 ```
 
 ### Version and upgrade

@@ -4,12 +4,11 @@ Copyright © 2024 Pone Ding <poneding@gmail.com>
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/poneding/ssher/internal/output"
 	"github.com/spf13/cobra"
 )
 
-const version = "v1.0.3"
+const version = "v1.1.0"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
@@ -17,7 +16,7 @@ var versionCmd = &cobra.Command{
 	Short: "ssher version.",
 	Long:  `ssher version`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("✓ Version: %s\n", version)
+		output.Done("Version: %s", version)
 	},
 }
 

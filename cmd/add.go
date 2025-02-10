@@ -11,14 +11,18 @@ import (
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Add a ssh profile.",
-	Long:  `Add a ssh profile, you will be prompted to input the profile name, host, port, user, password and private key file path.`,
+	Short: "Add a new server.",
+	Long:  `Add a new server, you will be prompted to input the server name, host, port, user, password and private key file path.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		profile := ssh.FormPrompt()
-		ssh.AddProfile(profile)
+		runAddServer()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
+}
+
+func runAddServer() {
+	server := ssh.AddFormPrompt()
+	ssh.AddServer(server)
 }

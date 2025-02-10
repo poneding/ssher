@@ -9,7 +9,7 @@ package ssh
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/base64"
 	"io"
 	"log"
 	"os"
@@ -19,29 +19,27 @@ import (
 	"syscall"
 
 	"github.com/creack/pty"
+	"github.com/poneding/ssher/internal/output"
 	"golang.org/x/term"
 )
 
-// Connect to the ssh server.
-func Connect(profile *Profile) {
-	cmd := exec.Command("ssh", "-p", strconv.Itoa(profile.Port))
-	passwordSSH := profile.Password != ""
-	if profile.PrivateKey != "" {
-		if profile.PrivateKey != "" {
-			cmd.Args = append(cmd.Args, "-i", profile.PrivateKey)
-		}
+// Connect to the server.
+func Connect(server *Server) {
+	cmd := exec.Command("ssh", "-p", strconv.Itoa(server.Port))
+	passwordSSH := server.Password != ""
+	if server.IdentityFile != "" {
+		cmd.Args = append(cmd.Args, "-i", server.IdentityFile)
 	}
 
-	if profile.User != "" {
-		cmd.Args = append(cmd.Args, profile.User+"@"+profile.Host)
+	if server.User != "" {
+		cmd.Args = append(cmd.Args, server.User+"@"+server.Host)
 	} else {
-		cmd.Args = append(cmd.Args, profile.Host)
+		cmd.Args = append(cmd.Args, server.Host)
 	}
 
 	ptmx, err := pty.Start(cmd)
 	if err != nil {
-		fmt.Println("✗ Failed to start ssh:", err)
-		os.Exit(0)
+		output.Fatal("Failed to start ssh: %s", err)
 	}
 	// Make sure to close the pty at the end.
 	defer func() { _ = ptmx.Close() }() // Best effort.
@@ -52,7 +50,7 @@ func Connect(profile *Profile) {
 	go func() {
 		for range ch {
 			if err := pty.InheritSize(os.Stdin, ptmx); err != nil {
-				log.Printf("error resizing pty: %s", err)
+				log.Printf("failed to resizing pty: %s", err)
 			}
 		}
 	}()
@@ -62,8 +60,7 @@ func Connect(profile *Profile) {
 	// Set stdin in raw mode.
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	if err != nil {
-		fmt.Println("✗ Failed to set stdin in raw mode:", err)
-		os.Exit(0)
+		output.Fatal("Failed to set stdin in raw mode: %s", err)
 	}
 	defer func() { _ = term.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
@@ -76,24 +73,25 @@ func Connect(profile *Profile) {
 		buf := make([]byte, 1024*4)
 		n, err := ptmx.Read(buf)
 		if err != nil {
-			fmt.Println("✗ Failed to read pty:", err)
-			os.Exit(0)
+			output.Fatal("Failed to read pty: %s", err)
 		}
 		if bytes.HasPrefix(buf[:n], []byte("The authenticity of host ")) {
 			// Write yes to the pty.
 			_, err = ptmx.Write([]byte("yes\n"))
 			if err != nil {
-				fmt.Println("✗ Failed to write yes to pty:", err)
-				os.Exit(0)
+				output.Fatal("Failed to write yes to pty: %s", err)
 			}
 			continue
 		}
 		if bytes.HasSuffix(buf[:n], []byte("password: ")) {
 			// Write the password to the pty.
-			_, err = ptmx.Write([]byte(profile.Password + "\n"))
+			decodedPwd, err := base64.StdEncoding.DecodeString(server.Password)
 			if err != nil {
-				fmt.Println("✗ Failed to write password to pty:", err)
-				os.Exit(0)
+				output.Fatal("Failed to decode password: %s", err)
+			}
+			_, err = ptmx.Write(append(decodedPwd, []byte("\n")...))
+			if err != nil {
+				output.Fatal("Failed to write password to pty: %s", err)
 			}
 			break
 		}
